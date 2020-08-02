@@ -7,8 +7,8 @@ import (
 
 // AppConfiguration type
 type AppConfiguration struct {
-	Listen int
-	Env    string
+	Port int
+	Env  string
 }
 
 func loadAppConfiguration() (AppConfiguration, error) {
@@ -37,6 +37,6 @@ func loadAppConfiguration() (AppConfiguration, error) {
 }
 
 func setDefaultAppConfiguration(provider *viper.Viper) {
-	provider.SetDefault("Listen", helper.GetEnvInt("LISTEN", 80))
+	provider.SetDefault("Port", helper.GetEnvInt("PORT", 80))
 	provider.SetDefault("Env", helper.GetEnv("ENV", "production"))
 }

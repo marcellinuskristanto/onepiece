@@ -20,11 +20,11 @@ func main() {
 	}
 	log.Println(fmt.Sprintf("1:%s", "LOAD CONFIG DONE"))
 
-	listenAddr := fmt.Sprintf(":%d", config.App.Listen)
+	listenAddr := fmt.Sprintf(":%d", config.App.Port)
 	// set environment
 	if config.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
-		listenAddr = fmt.Sprintf("0.0.0.0:%d", config.App.Listen)
+		listenAddr = fmt.Sprintf("0.0.0.0:%d", config.App.Port)
 	}
 	log.Println(fmt.Sprintf("2:%s", "SET PROD DONE"))
 	// set log
@@ -55,7 +55,7 @@ func main() {
 	}
 	log.Println(fmt.Sprintf("3:%s", "LOAD ROUTE END"))
 
-	log.Println(fmt.Sprintf("3:%d", config.App.Listen))
+	log.Println(fmt.Sprintf("3:%d", config.App.Port))
 
 	router.Run(listenAddr)
 }
