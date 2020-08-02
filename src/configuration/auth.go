@@ -38,7 +38,7 @@ func loadAuthConfiguration() (AuthConfiguration, error) {
 }
 
 func setDefaultAuthConfiguration(provider *viper.Viper) {
-	provider.SetDefault("Secret", helper.GetEnv("SECRET", "greenlandluffy").(string))
-	provider.SetDefault("Username", helper.GetEnv("USERNAME", "randomusernamesolong").(string))
-	provider.SetDefault("Password", helper.GetEnv("PASSWORD", "RndomP4dsssword").(string))
+	provider.SetDefault("Secret", helper.GetEnv("SECRET", "greenlandluffy"))
+	provider.SetDefault("Username", helper.GetEnv("USERNAME", "randomusernamesolong"))
+	provider.SetDefault("Password", helper.GetEnv("PASSWORD", "RndomP4dsssword"))
 }

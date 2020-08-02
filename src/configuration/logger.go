@@ -36,5 +36,5 @@ func loadLoggerConfiguration() (LoggerConfiguration, error) {
 }
 
 func setDefaultLoggerConfiguration(provider *viper.Viper) {
-	provider.SetDefault("Path", helper.GetEnv("LOG_PATH", "").(string))
+	provider.SetDefault("Path", helper.GetEnv("LOG_PATH", ""))
 }

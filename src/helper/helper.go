@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"strconv"
 )
 
 // Urljoin join url path
@@ -52,9 +53,17 @@ func DownloadFileAndReturn(siteurl string) (*os.File, string, error) {
 }
 
 // GetEnv default value
-func GetEnv(key string, fallback interface{}) interface{} {
+func GetEnv(key string, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
+	}
+	return fallback
+}
+
+// GetEnvInt integer
+func GetEnvInt(key string, fallback int) int {
+	if value, ok := os.LookupEnv(key); ok {
+		return strconv.Itoa(value)
 	}
 	return fallback
 }
