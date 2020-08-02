@@ -35,6 +35,9 @@ func main() {
 	authMiddleware := middleware.JWTMiddleware(config.Auth)
 
 	// Load all route
+	router.GET("/", func(c *gin.Context) {
+		c.String(200, "OK")
+	})
 	router.POST("/login", authMiddleware.LoginHandler)
 	router.Use(authMiddleware.MiddlewareFunc())
 	{
