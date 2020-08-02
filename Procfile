@@ -1,1 +1,1 @@
-web: onepiece
+web: bin/src
