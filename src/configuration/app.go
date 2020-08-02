@@ -37,6 +37,6 @@ func loadAppConfiguration() (AppConfiguration, error) {
 }
 
 func setDefaultAppConfiguration(provider *viper.Viper) {
-	provider.SetDefault("Listen", helper.GetEnvInt("LISTEN", 3000))
+	provider.SetDefault("Listen", helper.GetEnvInt("LISTEN", 80))
 	provider.SetDefault("Env", helper.GetEnv("ENV", "production"))
 }
