@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"time"
 )
 
 // Urljoin join url path
@@ -26,7 +27,10 @@ func Urljoin(sections ...string) string {
 
 // DownloadFileAndReturn from url
 func DownloadFileAndReturn(siteurl, referer string) (*os.File, string, error) {
-	client := &http.Client{}
+	timeout := GetEnvInt("TIMEOUT", 10)
+	client := &http.Client{
+		Timeout: time.Second * time.Duration(timeout),
+	}
 	req, err := http.NewRequest("GET", siteurl, nil)
 	req.Header.Add("Referer", referer)
 	response, err := client.Do(req)
