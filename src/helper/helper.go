@@ -23,7 +23,7 @@ func Urljoin(sections ...string) string {
 	return u.String()
 }
 
-// DownloadFile from url
+// DownloadFileAndReturn from url
 func DownloadFileAndReturn(siteurl string) (*os.File, string, error) {
 	response, err := http.Get(siteurl)
 	if err != nil {
@@ -31,7 +31,7 @@ func DownloadFileAndReturn(siteurl string) (*os.File, string, error) {
 	}
 	defer response.Body.Close()
 
-	file, err := ioutil.TempFile("", "*")
+	file, err := ioutil.TempFile("/tmp", "*")
 	if err != nil {
 		return nil, "", err
 	}
