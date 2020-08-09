@@ -8,4 +8,5 @@ type UploadRequest struct {
 	Filename    string `json:"filename" binding:"required"`
 	Region      string `json:"region" binding:"required"`
 	ACL         string `json:"acl"`
+	Referer     string `json:"referer"`
 }

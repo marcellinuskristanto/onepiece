@@ -41,7 +41,7 @@ func Upload(c *gin.Context) {
 
 	uploader := s3manager.NewUploader(sess)
 
-	f, contentType, err := helper.DownloadFileAndReturn(request.URLToUpload)
+	f, contentType, err := helper.DownloadFileAndReturn(request.URLToUpload, request.Referer)
 	if err != nil {
 		res["message"] = fmt.Sprintf("failed to download url %q, %v", request.URLToUpload, err)
 		c.JSON(500, res)

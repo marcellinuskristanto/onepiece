@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -24,14 +25,22 @@ func Urljoin(sections ...string) string {
 }
 
 // DownloadFileAndReturn from url
-func DownloadFileAndReturn(siteurl string) (*os.File, string, error) {
-	response, err := http.Get(siteurl)
+func DownloadFileAndReturn(siteurl, referer string) (*os.File, string, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", siteurl, nil)
+	req.Header.Add("Referer", referer)
+	response, err := client.Do(req)
+
+	// response, err := http.Get(siteurl)
 	if err != nil {
 		return nil, "", err
 	}
+	if response.StatusCode != 200 {
+		return nil, "", fmt.Errorf("Link response with status %d", response.StatusCode)
+	}
 	defer response.Body.Close()
 
-	file, err := ioutil.TempFile("/tmp", "*")
+	file, err := ioutil.TempFile("", "*")
 	if err != nil {
 		return nil, "", err
 	}
