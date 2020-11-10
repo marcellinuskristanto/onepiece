@@ -65,6 +65,19 @@ func DownloadFileAndReturn(siteurl, referer string) (*os.File, string, error) {
 	return file, response.Header.Get("Content-type"), nil
 }
 
+// GetFileContentType get file content type
+func GetFileContentType(out io.Reader) (string, error) {
+	buffer := make([]byte, 512)
+
+	_, err := out.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+	contentType := http.DetectContentType(buffer)
+
+	return contentType, nil
+}
+
 // GetEnv default value
 func GetEnv(key string, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {

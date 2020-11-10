@@ -12,6 +12,7 @@ func LoadRoute(r *gin.Engine) {
 	s3route := v1.Group("/s3")
 	{
 		s3route.POST("/upload", s3.Upload)
+		s3route.POST("/uploadFile", s3.UploadFile)
 		s3route.GET("/bucket", s3.GetBucket)
 		s3route.POST("/bucket", s3.CreateBucket)
 	}

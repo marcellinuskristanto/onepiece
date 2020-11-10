@@ -3,9 +3,11 @@ package s3
 import (
 	"context"
 	"fmt"
+	"mime"
 	"net/http"
 	"os"
 	"path"
+	fp "path/filepath"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -36,7 +38,8 @@ func Upload(c *gin.Context) {
 	}
 
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region: aws.String(request.Region),
+		// Region: aws.String(request.Region),
+		Region: aws.String("us-east-1"),
 	}))
 
 	uploader := s3manager.NewUploader(sess)
@@ -51,7 +54,8 @@ func Upload(c *gin.Context) {
 	defer f.Close()
 
 	result, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket:      aws.String(request.Bucket),
+		// Bucket:      aws.String(request.Bucket),
+		Bucket:      aws.String("mangaori"),
 		Key:         aws.String(path.Join(request.Filepath, request.Filename)),
 		Body:        f,
 		ACL:         &request.ACL,
@@ -59,13 +63,78 @@ func Upload(c *gin.Context) {
 	})
 	if err != nil {
 		res["message"] = fmt.Sprintf("failed to upload file, %v", err)
-		c.JSON(200, res)
+		c.JSON(500, res)
 		return
 	}
 	res["success"] = true
 	res["message"] = "File uploaded"
 	res["location"] = aws.StringValue(&result.Location)
 	c.JSON(200, res)
+}
+
+// UploadFile file to bucket
+func UploadFile(c *gin.Context) {
+	res := gin.H{
+		"success":  false,
+		"message":  "Unknown error",
+		"location": "",
+	}
+	form, _ := c.MultipartForm()
+	files := form.File["file"]
+	filename := c.PostForm("filename")
+	filepath := c.PostForm("filepath")
+	acl := "public-read"
+
+	if filepath == "" {
+		res["message"] = "Path required"
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	if len(files) <= 0 {
+		res["message"] = "File required"
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	file := files[0]
+	if filename == "" {
+		filename = file.Filename
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		res["message"] = fmt.Sprintf("failed reading file, %v", err)
+		c.JSON(500, res)
+		return
+	}
+	contentType, err := helper.GetFileContentType(f)
+	if err != nil {
+		ext := fp.Ext(filename)
+		contentType = mime.TypeByExtension(ext)
+	}
+
+	sess := session.Must(session.NewSession(&aws.Config{
+		// Region: aws.String(request.Region),
+		Region: aws.String("us-east-1"),
+	}))
+	uploader := s3manager.NewUploader(sess)
+	result, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket:      aws.String("mangaori"),
+		Key:         aws.String(path.Join(filepath, filename)),
+		Body:        f,
+		ACL:         &acl,
+		ContentType: aws.String(contentType),
+	})
+	if err != nil {
+		res["message"] = fmt.Sprintf("failed to upload file, %v", err)
+		c.JSON(500, res)
+		return
+	}
+
+	res["success"] = true
+	res["message"] = "File uploaded"
+	res["location"] = aws.StringValue(&result.Location)
+	c.JSON(http.StatusOK, res)
 }
 
 // GetBucket get bucket
