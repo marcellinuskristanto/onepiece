@@ -3,6 +3,7 @@ package s3
 import (
 	"context"
 	"fmt"
+	"io"
 	"mime"
 	"net/http"
 	"os"
@@ -111,6 +112,12 @@ func UploadFile(c *gin.Context) {
 	if err != nil {
 		ext := fp.Ext(filename)
 		contentType = mime.TypeByExtension(ext)
+	} else {
+		if _, err = f.Seek(0, io.SeekStart); err != nil {
+			res["message"] = fmt.Sprintf("failed rewind file pointer, %v", err)
+			c.JSON(500, res)
+			return
+		}
 	}
 
 	sess := session.Must(session.NewSession(&aws.Config{
