@@ -72,6 +72,7 @@ func JWTMiddleware(authConfig configuration.AuthConfiguration) *jwt.GinJWTMiddle
 				"code":    code,
 				"message": message,
 			})
+			c.Abort()
 		},
 		TokenLookup:   "header: Authorization",
 		TokenHeadName: "Bearer",
