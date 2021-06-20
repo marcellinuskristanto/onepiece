@@ -7,25 +7,32 @@ type Configuration struct {
 	Logger LoggerConfiguration
 }
 
+var config Configuration
+
 // LoadConfigurations load config file
-func LoadConfigurations() (config Configuration, err error) {
+func LoadConfigurations() (err error) {
+	config = Configuration{}
 	appConfig, err := loadAppConfiguration()
 	if err != nil {
-		return config, err
+		return err
 	}
 	config.App = appConfig
 
 	loggerConfig, err := loadLoggerConfiguration()
 	if err != nil {
-		return config, err
+		return err
 	}
 	config.Logger = loggerConfig
 
 	authConfig, err := loadAuthConfiguration()
 	if err != nil {
-		return config, err
+		return err
 	}
 	config.Auth = authConfig
 
-	return config, nil
+	return nil
+}
+
+func GetConfig() Configuration {
+	return config
 }

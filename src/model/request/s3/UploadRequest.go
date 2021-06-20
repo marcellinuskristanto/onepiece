@@ -4,7 +4,7 @@ package s3
 type UploadRequest struct {
 	Bucket      string `json:"bucket"`
 	URLToUpload string `json:"urltoupload" binding:"required"`
-	Filepath    string `json:"filepath" binding:"required"`
+	Filepath    string `json:"filepath"`
 	Filename    string `json:"filename" binding:"required"`
 	Region      string `json:"region"`
 	ACL         string `json:"acl"`

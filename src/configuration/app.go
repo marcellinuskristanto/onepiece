@@ -7,8 +7,11 @@ import (
 
 // AppConfiguration type
 type AppConfiguration struct {
-	Port int
-	Env  string
+	Port        int
+	Env         string
+	MinioUrl    string
+	MinioUser   string
+	MinioSecret string
 }
 
 func loadAppConfiguration() (AppConfiguration, error) {
@@ -39,4 +42,7 @@ func loadAppConfiguration() (AppConfiguration, error) {
 func setDefaultAppConfiguration(provider *viper.Viper) {
 	provider.SetDefault("Port", helper.GetEnvInt("PORT", 80))
 	provider.SetDefault("Env", helper.GetEnv("ENV", "production"))
+	provider.SetDefault("MinioUrl", helper.GetEnv("MINIO_URL", "play.min.io"))
+	provider.SetDefault("MinioUser", helper.GetEnv("MINIO_USER", "user"))
+	provider.SetDefault("MinioSecret", helper.GetEnv("MINIO_SECRET", "secret"))
 }

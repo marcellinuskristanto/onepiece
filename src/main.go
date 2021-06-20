@@ -8,15 +8,19 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/marcellinuskristanto/onepiece/src/configuration"
+	"github.com/marcellinuskristanto/onepiece/src/helper"
 	"github.com/marcellinuskristanto/onepiece/src/middleware"
 	"github.com/marcellinuskristanto/onepiece/src/route"
 )
 
 func main() {
-	config, err := configuration.LoadConfigurations()
+	var err error
+	err = configuration.LoadConfigurations()
 	if err != nil {
 		log.Fatalf("An error occurred while loading the configurations: %v", err)
 	}
+
+	config := configuration.GetConfig()
 
 	listenAddr := fmt.Sprintf(":%d", config.App.Port)
 	// set environment
@@ -32,6 +36,12 @@ func main() {
 	}
 
 	router := gin.Default()
+
+	// init minio
+	err = helper.InitMinio(config.App.MinioUrl, config.App.MinioUser, config.App.MinioSecret)
+	if err != nil {
+		log.Fatalf("An error occurred while init minio: %v", err)
+	}
 
 	// jwt middleware
 	authMiddleware := middleware.JWTMiddleware(config.Auth)
